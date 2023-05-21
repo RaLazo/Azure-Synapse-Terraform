@@ -4,8 +4,15 @@
       "name": "myTimer",
       "type": "timerTrigger",
       "direction": "in",
-      "schedule": "0 */5 * * * *"
-    }
+      "schedule": "0 */1 * * * *"
+    },
+    {
+      "type": "eventHub",
+      "name": "outputEventHubMessage",
+      "eventHubName": "myeventhub",
+      "connection": "MyEventHubSendAppSetting",
+      "direction": "out"
+  }
   ],
   "scriptFile": "../dist/wheater-scrapper/index.js"
 }

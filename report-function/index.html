@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Company Stats</title>
+  <style>
+    body {
+      background-color: #f2fff0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+    
+    .content {
+      background-color: white;
+      color: #333;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    #chart {
+      width: 800px;
+      height: 600px;
+    }
+  </style>
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+   
+</head>
+<body>
+  <div class="box-wrapper">
+    <div class="content">
+      <h1 class="title is-1">Company Stats</h1>
+        <canvas id="chart"></canvas>
+    </div>
+  </div>
+  <script>
+ 
+    const ctx = document.getElementById('chart').getContext('2d');
+    
+    fetch(window.location.href+"?data=true")
+      .then(res => res.json())
+      .then(res => {
+        console.log(res)
+        const data = {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [
+            {
+              label: 'Wheater',
+              data: res.wheater,
+              borderColor: 'rgb(75, 192, 192)',
+              backgroundColor: 'transparent',
+              yAxisID: 'y',
+            },
+            {
+              label: 'Wind',
+              data: res.wind,
+              borderColor: 'rgb(255, 99, 132)',
+              backgroundColor: 'transparent',
+              yAxisID: 'y1',
+            }
+          ]
+        };
+        new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: {
+          	  responsive: true,
+          	  interaction: {
+          	    mode: 'index',
+          	    intersect: false,
+          	  },
+          	  stacked: false,
+          	  plugins: {
+          	    title: {
+          	      display: true,
+          	      text: 'Company Wheater Sensors'
+          	    }
+          	  },
+          	  scales: {
+          	    y: {
+          	      type: 'linear',
+          	      display: true,
+          	      position: 'left',
+                  scaleLabel: {
+                    display: true,
+                    labelString: 'Temperature [°C]'
+                  }
+          	    },
+          	    y1: {
+          	      type: 'linear',
+          	      display: true,
+          	      position: 'right',
+                  scaleLabel: {
+                    display: true,
+                    labelString: 'Speed [km\h]'
+                  }
+          	    },
+          	  }
+            },
+      });
+      }).catch(err => console.log(err))
+    
+  </script>
+</body>
+</html>
