@@ -1,3 +1,9 @@
+variable "funcRelease" {
+  type        = string
+  description = "Name of current applied function release"
+  default     = "1.0.0"
+}
+
 variable "name" {
   type        = string
   description = "Name of the deployment"

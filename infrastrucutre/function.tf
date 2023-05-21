@@ -22,11 +22,14 @@ resource "azurerm_linux_function_app" "scrapper" {
   https_only                  = true
   builtin_logging_enabled     = false
   functions_extension_version = "~4"
-
+   zip_deploy_file = local_file.wheater_release.filename
   site_config {
     application_stack {
       node_version = "18"
     }
+  }
+  app_settings {
+    WEBSITE_RUN_FROM_PACKAGE=1
   }
 }
 
@@ -40,10 +43,32 @@ resource "azurerm_linux_function_app" "report" {
   https_only                  = true
   builtin_logging_enabled     = false
   functions_extension_version = "~4"
-
+  zip_deploy_file = local_file.report_releases.filename
   site_config {
     application_stack {
       node_version = "18"
     }
   }
+  app_settings {
+    WEBSITE_RUN_FROM_PACKAGE=1
+  }
+}
+
+data "http" "report_function" {
+  url = "https://github.com/RaLazo/Azure-Synapse-Terraform/releases/download/${var.funcRelease}/report-function.zip"
+}
+  
+
+data "local_file" "report_release" {
+  filename = "${path.module}/report-function.zip"
+  content  = "${data.http.report_function.body}"
+}
+
+data "http" "wheater_function" {
+  url = "https://github.com/RaLazo/Azure-Synapse-Terraform/releases/download/${var.funcRelease}/wheater-scrapper.zip"
+}
+
+data "local_file" "wheater_release" {
+  filename = "${path.module}/wheater-function.zip"
+  content  = "${data.http.wheater_function.body}"
 }
